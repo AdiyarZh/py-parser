@@ -6,7 +6,7 @@ HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:71.0) Gec
 HOST = 'https://auto.ria.com'
 
 
-def get_html(url, params=None):
+def get_html(url, params=''):
     r = requests.get(url, headers=HEADERS, params=params)
     return r
 
@@ -21,7 +21,7 @@ def get_content(html):
         if uah_price:
             uah_price = uah_price.get_text().replace(' • ', '')
         else:
-            uah_price = 'Цену уточняйте'
+            uah_price = 'price...'
         cars.append({
             'title': item.find('div', class_='na-card-name').get_text(strip=True),
             'link': HOST + item.find('span', class_='link').get('href'),
@@ -33,11 +33,18 @@ def get_content(html):
 
 
 def parse():
+    PAGINATION = input('Enter numberof pages: ')
+    PAGINATION = int(PAGINATION.strip())
+    
     html = get_html(URL)
     if html.status_code == 200:
-        cars = get_content(html.text)
+        cars = []
+        for page in range(1, PAGINATION):
+            print (f'parsing.. {page}')
+            html = get_html(URL, params={'page': page})    
+            cars.extend(get_content(html))
     else:
-        print('Error')
+        print('Something went wrong')
 
 
 parse()
