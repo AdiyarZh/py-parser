@@ -1,5 +1,4 @@
 import requests
-import xlwt
 from bs4 import BeautifulSoup
 from xlwt import Workbook
 from multiprocessing import Process, Queue
@@ -22,7 +21,7 @@ def get_html(url):
 
 
 def get_total_pages(html):
-    return 2
+    return 1
     # soup = BeautifulSoup(html, 'lxml')
 
     # pages = soup.find('div', class_='pager').find_all('a', class_='')[-1].text
@@ -73,10 +72,6 @@ def get_kv_info(html):
         except:
             shell = "None"
         try:
-            offer__advert_info = soup.find('div', class_='offer__advert-info')
-        except:
-            offer__advert_info = ""
-        try:
             cost = soup.find('div', class_='offer__price').text.strip()
         except:
             cost = "None"
@@ -97,11 +92,6 @@ def get_kv_info(html):
         except:
             engineVolume = ""
         try:
-            floor = soup.find('div', {"data-name": 'flat.floor'}
-                              ).find('div', class_='offer__advert-short-info').text
-        except:
-            floor = ""
-        try:
             mileage = ''
             for dt in offer__parameters:
                 if (dt.find(title='Пробег')):
@@ -109,11 +99,6 @@ def get_kv_info(html):
                         'dd').text.strip()
         except:
             mileage = ""
-        try:
-            renovation = soup.find('div', {
-                                   "data-name": 'flat.renovation'}).find('div', class_='offer__advert-short-info').text
-        except:
-            renovation = ""
         try:
             transmission = ''
             for dt in offer__parameters:
@@ -130,11 +115,6 @@ def get_kv_info(html):
                         'dd').text.strip()
         except:
             rudder = "None"
-        try:
-            priv_dorm = soup.find('div', {
-                                  "data-name": 'flat.priv_dorm'}).find('div', class_='offer__advert-short-info').text
-        except:
-            priv_dorm = "None"
         try:
             color = ''
             for dt in offer__parameters:
@@ -160,18 +140,6 @@ def get_kv_info(html):
         except:
             customCleared = "None"
 
-        data = {'City': location,
-                'Name': offer__title[0].text + offer__title[1].text,
-                'Year': offer__title[2].text,
-                'Shell': shell,
-                'Engine volume, L': engineVolume,
-                'Mileage': mileage,
-                'Transmission': transmission,
-                'Rudder': rudder,
-                'Color': color,
-                'Gear': gear,
-                'CustomsCleared': customCleared,
-                'Price': cost}
         global col
         global row
         global counter
@@ -211,7 +179,7 @@ def get_kv_info(html):
 
 
 def main():
-    print("Welcome to KrishaParser")
+    print("Welcome to Krisha Parser")
     base_url = 'https://kolesa.kz/cars/?'
     page_part = 'page='
 
@@ -254,7 +222,7 @@ def main():
     multiprocessing.log_to_stderr()
     logger = multiprocessing.get_logger()
     logger.setLevel(logging.INFO)
-    for i in range(1, total_pages):
+    for i in range(0, total_pages):
         url_gen = base_url + page_part + str(i)
         html = get_html(url_gen)
         try:
