@@ -10,184 +10,206 @@ row = 0
 col = 0
 wb = Workbook()
 counter = 0
-sheet1 = wb.add_sheet('Sheet 1') 
-def get_html(url):
-        try:
-            r = requests.get(url)
-            return r.text
-        except Exception as error:
-                print(error)
-def get_total_pages(html):
-    soup = BeautifulSoup(html, 'lxml')
+sheet1 = wb.add_sheet('Sheet 1')
 
-    pages = soup.find('div', class_='pager').find_all('a', class_='')[-1].text
-    
-    return int(pages)
+
+def get_html(url):
+    try:
+        r = requests.get(url)
+        return r.text
+    except Exception as error:
+        print(error)
+
+
+def get_total_pages(html):
+    return 2
+    # soup = BeautifulSoup(html, 'lxml')
+
+    # pages = soup.find('div', class_='pager').find_all('a', class_='')[-1].text
+
+    # return int(pages)
+
 
 def get_page_data(html):
-        try:
-                soup = BeautifulSoup(html, 'lxml')
-                pages = soup.find_all('a', class_='ddl_product_link')
-                pages = list(dict.fromkeys(pages))
-                for i in pages:
-                        try:
-                            kv = i.get('href')
-                            kv_html = get_html('https://kolesa.kz' + kv)
-                            print('https://kolesa.kz' + kv)
-                            p = Process(target=get_kv_info(kv_html),)
-                            p.start()
-                        except Exception as error:
-                            print(error)
-        except Exception as error:
+    try:
+        soup = BeautifulSoup(html, 'lxml')
+        pages = soup.find_all('a', class_='ddl_product_link')
+        pages = list(dict.fromkeys(pages))
+        for i in pages:
+            try:
+                kv = i.get('href')
+                kv_html = get_html('https://kolesa.kz' + kv)
+                print('https://kolesa.kz' + kv)
+                p = Process(target=get_kv_info(kv_html),)
+                p.start()
+            except Exception as error:
                 print(error)
+    except Exception as error:
+        print(error)
+
+
 def get_kv_info(html):
     try:
-            try:
-                soup = BeautifulSoup(html, 'lxml')
-            except:
-                print('error')
-            try:
-                offer__parameters = soup.find('div', class_='offer__parameters').find_all('dl')
-            except:
-                offer__parameters = "None"
-            try:
-                offer__title = soup.find('h1', class_='offer__title').find_all('span')
-            except:
-                offer__title = "None"
-            try:
-                shell = ''
-                for dt in offer__parameters:
-                        if (dt.find(title='Кузов')):
-                                shell = dt.find(title='Кузов').parent.find('dd').text.strip()
-            except:
-                shell = "None"
-            try:
-                offer__advert_info = soup.find('div', class_='offer__advert-info')
-            except:
-                offer__advert_info = ""
-            try:
-                cost = soup.find('div', class_='offer__price').text.strip()
-            except:
-                cost = "None"
-            try:
-                location = ''
-                for dt in offer__parameters:
-                        if (dt.find(title='Город')):
-                                location = dt.find(title='Город').parent.find('dd').text.strip()
-            except:
-                location = ""
-            try:
-                engineVolume = ''
-                for dt in offer__parameters:
-                        if (dt.find(title='Объем двигателя, л')):
-                                engineVolume = dt.find(title='Объем двигателя, л').parent.find('dd').text.strip()
-            except:
-                engineVolume = ""
-            try:
-                floor = soup.find('div', {"data-name":'flat.floor'}).find('div', class_='offer__advert-short-info').text
-            except:
-                floor = ""
-            try:
-                mileage = ''
-                for dt in offer__parameters:
-                        if (dt.find(title='Пробег')):
-                                mileage = dt.find(title='Пробег').parent.find('dd').text.strip()
-            except:
-                mileage = ""
-            try:
-                renovation = soup.find('div', {"data-name":'flat.renovation'}).find('div', class_='offer__advert-short-info').text
-            except:
-                renovation = ""
-            try:
-                transmission = ''
-                for dt in offer__parameters:
-                        if (dt.find(title='Коробка передач')):
-                                transmission = dt.find(title='Коробка передач').parent.find('dd').text.strip()
-            except:
-                transmission = "None"
-            try:
-                rudder = ''
-                for dt in offer__parameters:
-                        if (dt.find(title='Руль')):
-                                rudder = dt.find(title='Руль').parent.find('dd').text.strip()
-            except:
-                rudder = "None"
-            try:
-                priv_dorm = soup.find('div', {"data-name":'flat.priv_dorm'}).find('div', class_='offer__advert-short-info').text
-            except:
-                priv_dorm = "None"
-            try:
-                color = ''
-                for dt in offer__parameters:
-                        if (dt.find(title='Цвет')):
-                                color = dt.find(title='Цвет').parent.find('dd').text.strip()
-            except:
-                color = "None"
-            try:
-                gear = ''
-                for dt in offer__parameters:
-                        if (dt.find(title='Привод')):
-                                gear = dt.find(title='Привод').parent.find('dd').text.strip()
-            except:
-                gear = "None"
-            try:
-                customCleared = ''
-                for dt in offer__parameters:
-                        if (dt.find(title='Растаможен в Казахстане')):
-                                customCleared = dt.find(title='Растаможен в Казахстане').parent.find('dd').text.strip()
-            except:
-                customCleared = "None"
-            
-            
-            data = {'City' : location,
-                    'Name' : offer__title[0].text + offer__title[1].text,
-                    'Year' : offer__title[2].text,
-                    'Shell' : shell,
-                    'Engine volume, L' : engineVolume,
-                    'Mileage' : mileage,
-                    'Transmission' : transmission,
-                    'Rudder' : rudder,
-                    'Color' : color,
-                    'Gear' : gear,
-                    'CustomsCleared' : customCleared,
-                    'Price' : cost}
-            global col
-            global row
-            global counter
-            global sheet1
-            sheet1.write(row, col, row)
-            col = col + 1
-            sheet1.write(row, col, location)
-            col = col + 1
-            sheet1.write(row, col, offer__title[0].text + offer__title[1].text)
-            col = col + 1
-            sheet1.write(row, col, offer__title[2].text)
-            col = col + 1
-            sheet1.write(row, col, shell)
-            col = col + 1
-            sheet1.write(row, col, engineVolume)
-            col = col + 1
-            sheet1.write(row, col, mileage)
-            col = col + 1
-            sheet1.write(row, col, transmission)
-            col = col + 1
-            sheet1.write(row, col, rudder)
-            col = col + 1
-            sheet1.write(row, col, color)
-            col = col + 1
-            sheet1.write(row, col, gear)
-            col = col + 1
-            sheet1.write(row, col, customCleared)
-            col = col + 1
-            sheet1.write(row, col, cost)
-            col = col + 1
-            row = row + 1
-            col = 0
-            counter = counter + 1
-            wb.save('xlwt example.xls')
+        try:
+            soup = BeautifulSoup(html, 'lxml')
+        except:
+            print('error')
+        try:
+            offer__parameters = soup.find(
+                'div', class_='offer__parameters').find_all('dl')
+        except:
+            offer__parameters = "None"
+        try:
+            offer__title = soup.find(
+                'h1', class_='offer__title').find_all('span')
+        except:
+            offer__title = "None"
+        try:
+            shell = ''
+            for dt in offer__parameters:
+                if (dt.find(title='Кузов')):
+                    shell = dt.find(title='Кузов').parent.find(
+                        'dd').text.strip()
+        except:
+            shell = "None"
+        try:
+            offer__advert_info = soup.find('div', class_='offer__advert-info')
+        except:
+            offer__advert_info = ""
+        try:
+            cost = soup.find('div', class_='offer__price').text.strip()
+        except:
+            cost = "None"
+        try:
+            location = ''
+            for dt in offer__parameters:
+                if (dt.find(title='Город')):
+                    location = dt.find(title='Город').parent.find(
+                        'dd').text.strip()
+        except:
+            location = ""
+        try:
+            engineVolume = ''
+            for dt in offer__parameters:
+                if (dt.find(title='Объем двигателя, л')):
+                    engineVolume = dt.find(
+                        title='Объем двигателя, л').parent.find('dd').text.strip()
+        except:
+            engineVolume = ""
+        try:
+            floor = soup.find('div', {"data-name": 'flat.floor'}
+                              ).find('div', class_='offer__advert-short-info').text
+        except:
+            floor = ""
+        try:
+            mileage = ''
+            for dt in offer__parameters:
+                if (dt.find(title='Пробег')):
+                    mileage = dt.find(title='Пробег').parent.find(
+                        'dd').text.strip()
+        except:
+            mileage = ""
+        try:
+            renovation = soup.find('div', {
+                                   "data-name": 'flat.renovation'}).find('div', class_='offer__advert-short-info').text
+        except:
+            renovation = ""
+        try:
+            transmission = ''
+            for dt in offer__parameters:
+                if (dt.find(title='Коробка передач')):
+                    transmission = dt.find(
+                        title='Коробка передач').parent.find('dd').text.strip()
+        except:
+            transmission = "None"
+        try:
+            rudder = ''
+            for dt in offer__parameters:
+                if (dt.find(title='Руль')):
+                    rudder = dt.find(title='Руль').parent.find(
+                        'dd').text.strip()
+        except:
+            rudder = "None"
+        try:
+            priv_dorm = soup.find('div', {
+                                  "data-name": 'flat.priv_dorm'}).find('div', class_='offer__advert-short-info').text
+        except:
+            priv_dorm = "None"
+        try:
+            color = ''
+            for dt in offer__parameters:
+                if (dt.find(title='Цвет')):
+                    color = dt.find(title='Цвет').parent.find(
+                        'dd').text.strip()
+        except:
+            color = "None"
+        try:
+            gear = ''
+            for dt in offer__parameters:
+                if (dt.find(title='Привод')):
+                    gear = dt.find(title='Привод').parent.find(
+                        'dd').text.strip()
+        except:
+            gear = "None"
+        try:
+            customCleared = ''
+            for dt in offer__parameters:
+                if (dt.find(title='Растаможен в Казахстане')):
+                    customCleared = dt.find(
+                        title='Растаможен в Казахстане').parent.find('dd').text.strip()
+        except:
+            customCleared = "None"
+
+        data = {'City': location,
+                'Name': offer__title[0].text + offer__title[1].text,
+                'Year': offer__title[2].text,
+                'Shell': shell,
+                'Engine volume, L': engineVolume,
+                'Mileage': mileage,
+                'Transmission': transmission,
+                'Rudder': rudder,
+                'Color': color,
+                'Gear': gear,
+                'CustomsCleared': customCleared,
+                'Price': cost}
+        global col
+        global row
+        global counter
+        global sheet1
+        sheet1.write(row, col, row)
+        col = col + 1
+        sheet1.write(row, col, location)
+        col = col + 1
+        sheet1.write(row, col, offer__title[0].text + offer__title[1].text)
+        col = col + 1
+        sheet1.write(row, col, offer__title[2].text)
+        col = col + 1
+        sheet1.write(row, col, shell)
+        col = col + 1
+        sheet1.write(row, col, engineVolume)
+        col = col + 1
+        sheet1.write(row, col, mileage)
+        col = col + 1
+        sheet1.write(row, col, transmission)
+        col = col + 1
+        sheet1.write(row, col, rudder)
+        col = col + 1
+        sheet1.write(row, col, color)
+        col = col + 1
+        sheet1.write(row, col, gear)
+        col = col + 1
+        sheet1.write(row, col, customCleared)
+        col = col + 1
+        sheet1.write(row, col, cost)
+        col = col + 1
+        row = row + 1
+        col = 0
+        counter = counter + 1
+        wb.save('result.xls')
     except Exception as error:
-        print(error)    
-    
+        print(error)
+
+
 def main():
     print("Welcome to KrishaParser")
     base_url = 'https://kolesa.kz/cars/?'
@@ -200,8 +222,7 @@ def main():
     global col
     global wb
     global sheet1
-    
-    
+
     sheet1.write(row, col, '#')
     col = col + 1
     sheet1.write(row, col, 'City')
@@ -230,17 +251,17 @@ def main():
     col = col + 1
     row = row + 1
     col = 0
-    num_processes = total_pages
-    processes = []
     multiprocessing.log_to_stderr()
     logger = multiprocessing.get_logger()
     logger.setLevel(logging.INFO)
     for i in range(1, total_pages):
-                url_gen = base_url + page_part + str(i)
-                html = get_html(url_gen)
-                try:
-                        get_page_data(html)
-                except Exception as error:
-                        print(error)
-if __name__== "__main__" :
-        main()
+        url_gen = base_url + page_part + str(i)
+        html = get_html(url_gen)
+        try:
+            get_page_data(html)
+        except Exception as error:
+            print(error)
+
+
+if __name__ == "__main__":
+    main()
