@@ -49,10 +49,7 @@ def get_page_data(html):
 
 def get_kv_info(html):
     try:
-        try:
-            soup = BeautifulSoup(html, 'lxml')
-        except:
-            print('error')
+        soup = BeautifulSoup(html, 'lxml')
         try:
             offer__parameters = soup.find(
                 'div', class_='offer__parameters').find_all('dl')
