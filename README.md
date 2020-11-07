@@ -1,2 +1,2 @@
 # py-parser
-Simple parser with Python
+Web parser with Python
