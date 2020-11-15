@@ -21,7 +21,7 @@ def get_html(url):
 
 
 def get_total_pages(html):
-    return 1
+    return 50
     # soup = BeautifulSoup(html, 'lxml')
 
     # pages = soup.find('div', class_='pager').find_all('a', class_='')[-1].text
