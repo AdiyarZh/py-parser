@@ -170,7 +170,7 @@ def get_kv_info(html):
         row = row + 1
         col = 0
         counter = counter + 1
-        wb.save('result.xls')
+        wb.save('./result/result.xls')
     except Exception as error:
         print(error)
 
