@@ -5,12 +5,12 @@ from multiprocessing import Process, Queue
 from multiprocessing import Pool
 import logging
 import multiprocessing
+import csv
 row = 0
 col = 0
 wb = Workbook()
 counter = 0
 sheet1 = wb.add_sheet('Sheet 1')
-
 
 def get_html(url):
     try:
@@ -19,7 +19,6 @@ def get_html(url):
     except Exception as error:
         print(error)
 
-
 def get_total_pages(html):
     return 1
     # soup = BeautifulSoup(html, 'lxml')
@@ -27,7 +26,6 @@ def get_total_pages(html):
     # pages = soup.find('div', class_='pager').find_all('a', class_='')[-1].text
 
     # return int(pages)
-
 
 def get_page_data(html):
     try:
@@ -40,13 +38,12 @@ def get_page_data(html):
                 kv_html = get_html('https://kolesa.kz' + kv)
                 print('https://kolesa.kz' + kv)
                 p = Process(target=get_kv_info(kv_html),)
-                p.start()
+                p.start()            
             except Exception as error:
                 print(error)
     except Exception as error:
         print(error)
-
-
+ 
 def get_kv_info(html):
     try:
         soup = BeautifulSoup(html, 'lxml')
@@ -141,6 +138,8 @@ def get_kv_info(html):
         global row
         global counter
         global sheet1
+       
+        # Excel Writer
         sheet1.write(row, col, row)
         col = col + 1
         sheet1.write(row, col, location)
@@ -167,22 +166,33 @@ def get_kv_info(html):
         col = col + 1
         sheet1.write(row, col, cost)
         col = col + 1
+        wb.save('./output/result.xls')
+        
+        with open(csv_file, mode='a', newline='', encoding='utf-16') as result_file:
+            result_writer = csv.writer(result_file, delimiter=';')
+
+            result_writer.writerow([row, location, offer__title[0].text + offer__title[1].text, offer__title[2].text,
+            shell, engineVolume, mileage, transmission, rudder, color, gear, customCleared])
+        
         row = row + 1
         col = 0
         counter = counter + 1
-        wb.save('./result/result.xls')
+
     except Exception as error:
         print(error)
-
-
+ 
 def main():
-    print("Welcome to Krisha Parser")
+    print("Welcome to krisha.kz scrapper App")
     base_url = 'https://kolesa.kz/cars/?'
     page_part = 'page='
 
     base_html = get_html(base_url)
+
     total_pages = get_total_pages(base_html)
-    print(total_pages)
+    page_number = 1
+    print(page_number, " page(s): \n")
+    
+    global csv_file
     global row
     global col
     global wb
@@ -216,17 +226,27 @@ def main():
     col = col + 1
     row = row + 1
     col = 0
+    # wb.save('./output/result.xls')
+
+    csv_file = "./output/result.csv"
     multiprocessing.log_to_stderr()
     logger = multiprocessing.get_logger()
     logger.setLevel(logging.INFO)
-    for i in range(0, total_pages):
+    
+    with open(csv_file, mode='w', newline='', encoding='utf-16') as result_file:
+        result_writer = csv.writer(result_file, delimiter=';')
+
+        result_writer.writerow(['#', 'City', 'Name', 'Year', 'Shell', 'Engine volume, L', 
+        'Mileage', 'Transmission', 'Rudder', 'Color', 'Gear', 'CustomsCleared'])
+    
+
+    for i in range(0, page_number):
         url_gen = base_url + page_part + str(i)
         html = get_html(url_gen)
         try:
             get_page_data(html)
         except Exception as error:
             print(error)
-
 
 if __name__ == "__main__":
     main()
