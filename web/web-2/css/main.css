@@ -810,6 +810,27 @@ legend {
   box-sizing: border-box;
 }
 
+.s003 form {
+  width: 100%;
+  max-width: 790px;
+  margin-bottom: 0;
+}
+
+.s003 form .inner-form {
+  background: #fff;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+  -ms-flex-align: center;
+      align-items: center;
+  box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+
+
+
 .s007 {
   min-height: 100vh;
   display: -ms-flexbox;
