@@ -6,6 +6,7 @@ from multiprocessing import Pool
 import logging
 import multiprocessing
 import csv
+import string
 row = 0
 col = 0
 wb = Workbook()
@@ -75,7 +76,7 @@ def get_kv_info(html):
         except:
             shell = "None"
         try:
-            cost = soup.find('div', class_='offer__price').text.strip()
+            cost = soup.find('div', class_='offer__price').text.replace('\n', '').replace('\t','').replace('\r','').replace(' ','')
         except:
             cost = "None"
         try:
@@ -181,7 +182,7 @@ def get_kv_info(html):
             result_writer = csv.writer(result_file, delimiter=';')
 
             result_writer.writerow([row, location, offer__title[0].text + offer__title[1].text, offer__title[2].text,
-            shell, engineVolume, mileage, transmission, rudder, color, gear, customCleared])
+            shell, engineVolume, mileage, transmission, rudder, color, gear, customCleared, cost])
         
         row = row + 1
         col = 0
@@ -246,7 +247,7 @@ def main():
         result_writer = csv.writer(result_file, delimiter=';')
 
         result_writer.writerow(['#', 'City', 'Name', 'Year', 'Shell', 'Engine volume, L', 
-        'Mileage', 'Transmission', 'Rudder', 'Color', 'Gear', 'CustomsCleared'])
+        'Mileage', 'Transmission', 'Rudder', 'Color', 'Gear', 'CustomsCleared', 'Price'])
     
 
     for i in range(0, page_number):
