@@ -55,18 +55,18 @@
         }
     }
 
-    function showValidate(input) {
-        var thisAlert = $(input).parent();
+    // function showValidate(input) {
+    //     var thisAlert = $(input).parent();
 
-        $(thisAlert).addClass('alert-validate');
+    //     $(thisAlert).addClass('alert-validate');
 
-        $(thisAlert).append('<span class="btn-hide-validate">&#xf136;</span>')
-        $('.btn-hide-validate').each(function(){
-            $(this).on('click',function(){
-               hideValidate(this);
-            });
-        });
-    }
+    //     $(thisAlert).append('<span class="btn-hide-validate">&#xf136;</span>')
+    //     $('.btn-hide-validate').each(function(){
+    //         $(this).on('click',function(){
+    //            hideValidate(this);
+    //         });
+    //     });
+    // }
 
     function hideValidate(input) {
         var thisAlert = $(input).parent();
