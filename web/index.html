@@ -64,7 +64,7 @@
   <body>
     <div class="container-contact100">
       <div class="wrap-contact100">
-        <form class="contact100-form validate-form">
+        <form class="contact100-form validate-form" method="GET" action="../../output/result.csv">
           <span class="contact100-form-title">
             Welcome to kolesa.kz parser
           </span>
@@ -74,7 +74,8 @@
             data-validate="Please Type Your File Name"
           >
             <span class="label-input100">filename</span>
-            <input
+			<input
+		  	  id="file-name"
               class="input100"
               type="text"
               name="filename"
@@ -125,7 +126,7 @@
           </div>
 
           <div class="container-contact100-form-btn">
-            <button class="contact100-form-btn">
+            <button class="contact100-form-btn" type="submit">
               <span>
                 START SCRAPPING
                 <i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
