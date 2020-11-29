@@ -1,4 +1,3 @@
-
     function generate(form) {
 
         var filename = form.filename.value
@@ -13,7 +12,6 @@
         downloadBlob("../output/result" + filetype, filename)
  
     }
-
 
     function downloadBlob(blob, filename) {
         var a = document.createElement('a');
