@@ -65,7 +65,12 @@
     <div class="container-contact100">
       <div class="wrap-contact100">
         <!-- replace with action -->
-        <form class="contact100-form validate-form" method="GET" action="../../output/result.csv">
+        <form
+        action="javascript:generate(this)
+          class="contact100-form validate-form"
+          method="POST"
+          onsubmit="generate(this)"
+        >
           <span class="contact100-form-title">
             Welcome to kolesa.kz parser
           </span>
@@ -75,8 +80,8 @@
             data-validate="Please Type Your File Name"
           >
             <span class="label-input100">filename</span>
-			<input
-		  	  id="file-name"
+            <input
+              id="fileName"
               class="input100"
               type="text"
               name="filename"
@@ -92,7 +97,7 @@
                 class="input-radio100"
                 id="radio1"
                 type="radio"
-                name="file-type"
+                name="filetype"
                 value="csv"
                 checked="checked"
               />
@@ -104,7 +109,7 @@
                 class="input-radio100"
                 id="radio2"
                 type="radio"
-                name="file-type"
+                name="filetype"
                 value="excel"
               />
               <label class="label-radio100" for="radio2"> Excel </label>
@@ -117,8 +122,8 @@
             <div class="contact100-form-range-value">
               <span id="value-lower">1</span> -
               <span id="value-upper">100</span>
-              <input type="text" name="from-value" />
-              <input type="text" name="to-value" />
+              <input type="text" name="fromValue" />
+              <input type="text" name="toValue" />
             </div>
 
             <div class="contact100-form-range-bar">
@@ -172,8 +177,7 @@
     <!--===============================================================================================-->
     <script src="vendor/countdowntime/countdowntime.js"></script>
     <!--===============================================================================================-->
-	<script src="vendor/noui/nouislider.min.js"></script>
-	
+    <script src="vendor/noui/nouislider.min.js"></script>
 
     <script>
       var filterBar = document.getElementById("filter-bar");
@@ -194,18 +198,19 @@
 
       filterBar.noUiSlider.on("update", function (values, handle) {
         skipValues[handle].innerHTML = Math.round(values[handle]);
-        $('.contact100-form-range-value input[name="from-value"]').val(
+        $('.contact100-form-range-value input[name="fromValue"]').val(
           $("#value-lower").html()
         );
-        $('.contact100-form-range-value input[name="to-value"]').val(
+        $('.contact100-form-range-value input[name="toValue"]').val(
           $("#value-upper").html()
         );
       });
-	</script>
-	
+    </script>
 
     <!--===============================================================================================-->
     <script src="js/main.js"></script>
+    <script src="js/generator.js"></script>
+
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script

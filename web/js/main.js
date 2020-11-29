@@ -1,14 +1,5 @@
-
 (function ($) {
     "use strict";
-
-
-    var form = document.getElementById('form-name');
-    var data = new FormData(form);
-    for (var [key, value] of data) {
-        console.log(key, value)
-    }
-
 
     /*==================================================================
     [ Validate after type ]*/
@@ -24,8 +15,6 @@
     })
 
     
-  
-  
     /*==================================================================
     [ Validate ]*/
     var input = $('.validate-input .input100');
@@ -39,7 +28,6 @@
                 check=false;
             }
         }
-
         return check;
     });
 
@@ -82,7 +70,6 @@
         $(thisAlert).removeClass('alert-validate');
         $(thisAlert).find('.btn-hide-validate').remove();
     }
-    
-    
 
+   
 })(jQuery);
