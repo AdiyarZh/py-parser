@@ -200,7 +200,7 @@ def main():
 
     total_pages = get_total_pages(base_html)
     # 1 page -> 40 adv
-    page_number = 26 # 1040
+    page_number = 1 # 1040
     print(page_number, " page(s): \n")
     
     global csv_file
