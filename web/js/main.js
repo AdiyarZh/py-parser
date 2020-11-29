@@ -3,6 +3,13 @@
     "use strict";
 
 
+    var form = document.getElementById('form-name');
+    var data = new FormData(form);
+    for (var [key, value] of data) {
+        console.log(key, value)
+    }
+
+
     /*==================================================================
     [ Validate after type ]*/
     $('.validate-input .input100').each(function(){
@@ -15,6 +22,8 @@
             }
         })    
     })
+
+    
   
   
     /*==================================================================
